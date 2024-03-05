@@ -6,21 +6,21 @@ function App() {
   const [data, setData] = useState<number>(0);
   const [timer, setTimer] = useState<number>(0);
 
-  const createMuation = gql`
-    mutation Mutation($createUserData2: [UserInput]!) {
-      createUser(data: $createUserData2) {
-        data
-      }
-    }
-  `;
-
   // const createMuation = gql`
-  //   mutation Mutation {
-  //     test {
-  //       _id
+  //   mutation Mutation($createUserData2: [UserInput]!) {
+  //     createUser(data: $createUserData2) {
+  //       data
   //     }
   //   }
   // `;
+
+  const createMuation = gql`
+    mutation Mutation($input: Performance) {
+      createPerformance(input: $input) {
+        _id
+      }
+    }
+  `;
   const [create] = useMutation(createMuation);
   const handleSubmit = async () => {
     setTimeout(() => {
@@ -30,21 +30,27 @@ function App() {
     const records = Array.from({ length: data }, (_, index) => ({
       one: `user ${index + 1}`
     }));
+    // let i = 0;
+    // while (i < data) {
+    //   await fetch("http://192.168.100.4:5000/api/v1/user", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(records)
+    //   });
+    //   i++;
+    // }
+
     let i = 0;
     while (i < data) {
-      // await fetch("http://192.168.100.4:5000/api/v1/user", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify(records)
-      // });
-
       await create({
         variables: {
-          createUserData2: records
+          input: records
         }
       });
+      
+    
       i++;
     }
   };
